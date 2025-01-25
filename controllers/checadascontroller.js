@@ -43,6 +43,7 @@ const getChecadasPorDepartamento = async (req, res) => {
     const poolConnection = await pool;
 
     const vistasPorDepartamento = {
+      '1': 'Checadas_Generales',
       '2': 'Checadas_Sistemas',
       '5': 'Checadas_Tesoreria',
       '4': 'Checadas_Nominas',
