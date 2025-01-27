@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 
 // Middleware global
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // Importar y usar rutas
