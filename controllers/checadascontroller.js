@@ -27,7 +27,7 @@ const login = async (req, res) => {
     // Retornar el departamento al cual pertenece el usuario
     return res.json({
       message: 'Inicio de sesión exitoso',
-      departamento: user.department_id, // Ajusta según el nombre exacto de la columna en tu tabla
+      departamento: user.department_id,
     });
   } catch (error) {
     console.error('Error en login:', error);
@@ -77,33 +77,8 @@ const getChecadas = async (req, res) => {
     const poolConnection = await pool; // Usa la conexión existente desde db.js
 
     const query = `
-SELECT 
-    chec.id AS idChecada,
-    pers.nickname AS ClaveEmpleado,
-    pers.first_name AS Nombre,
-    dep.dept_name AS Departamento,
-    zona.alias AS Zona,
-    FORMAT(chec.punch_time, 'yyyy-MM-dd') AS FechaChecada,
-    pos.position_name AS Puesto,
-    pos.position_code AS ClavePuesto,
-    0 AS Activos,
-    0 AS Checados,
-    (SELECT FORMAT(MIN(ct.punch_time), 'HH:mm')
-     FROM iclock_transaction ct
-     WHERE ct.emp_code = chec.emp_code 
-       AND FORMAT(ct.punch_time, 'dd/MM/yyyy') = FORMAT(chec.punch_time, 'dd/MM/yyyy')
-    ) AS HoraEntrada, -- Subconsulta para obtener la primera checada
-    (SELECT FORMAT(MAX(ct.punch_time), 'HH:mm')
-     FROM iclock_transaction ct
-     WHERE ct.emp_code = chec.emp_code 
-       AND FORMAT(ct.punch_time, 'dd/MM/yyyy') = FORMAT(chec.punch_time, 'dd/MM/yyyy')
-    ) AS HoraSalida -- Subconsulta para obtener la última checada
-FROM iclock_transaction AS chec
-LEFT JOIN personnel_employee AS pers ON chec.emp_code = pers.emp_code
-INNER JOIN personnel_position AS pos ON pers.position_id = pos.id
-INNER JOIN personnel_department AS dep ON pers.department_id = dep.id
-INNER JOIN iclock_terminal AS zona ON chec.terminal_id = zona.id
-ORDER BY chec.id, chec.punch_time;
+SELECT * FROM Checadas_Generales
+order by idChecada;
 
     `;
 
