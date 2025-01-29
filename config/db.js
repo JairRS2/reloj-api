@@ -1,43 +1,64 @@
 require("dotenv").config(); // Cargar variables desde el archivo .env
 const sql = require("mssql");
 
-// Configuración de conexión para la base de datos
-const dbConfig = {
-  user: process.env.DB_USER, // Usuario de SQL Server
-  password: process.env.DB_PASSWORD, // Contraseña
-  server: process.env.DB_SERVER, // Dirección IP o nombre del servidor
-  database: process.env.DB_DATABASE, // Nombre de la base de datos
-  port: 1433, // Puerto de SQL Server
+// Configuración de conexión para las bases de datos
+const dbConfigRelojBioTimeGrupo = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASEGRUPO,
+  port: 1433,
   options: {
-    encrypt: false, // Cambiar a true si la conexión requiere encriptación
-    enableArithAbort: true, // Requerido en algunas configuraciones de SQL Server
+    encrypt: false,
+    enableArithAbort: true,
   },
 };
 
-// Crear la conexión a la base de datos
-const pool = new sql.ConnectionPool(dbConfig);
+const dbConfigRelojBioTimeCentral = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASECENTRAL,
+  port: 1433,
+  options: {
+    encrypt: false,
+    enableArithAbort: true,
+  },
+};
+
+// Crear las conexiones a las bases de datos
+const poolGrupo = new sql.ConnectionPool(dbConfigRelojBioTimeGrupo);
+const poolCentral = new sql.ConnectionPool(dbConfigRelojBioTimeCentral);
 
 (async () => {
   try {
-    // Intentar conectar
-    await pool.connect();
+    // Intentar conectar a ambas bases de datos
+    await poolGrupo.connect();
     console.log("✅ Conexión a RelojBioTimeGrupo exitosa");
+
+    await poolCentral.connect();
+    console.log("✅ Conexión a RelojBioTimeCentral exitosa");
+
   } catch (error) {
     console.error("❌ Error al conectar con SQL Server:", error.message);
   }
 })();
 
-// Cerrar la conexión de forma segura al salir
+// Cerrar las conexiones de forma segura al salir
 process.on("SIGINT", async () => {
   try {
-    await pool.close();
-    console.log("🔌 Conexión a dbAlmacen cerrada correctamente");
+    await poolGrupo.close();
+    console.log("🔌 Conexión a RelojBioTimeGrupo cerrada correctamente");
+
+    await poolCentral.close();
+    console.log("🔌 Conexión a RelojBioTimeCentral cerrada correctamente");
+
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error al cerrar la conexión:", error.message);
+    console.error("❌ Error al cerrar las conexiones:", error.message);
     process.exit(1);
   }
 });
 
-// Exportar la conexión para otros módulos
-module.exports = { pool };
+// Exportar las conexiones para otros módulos
+module.exports = { poolGrupo, poolCentral };
