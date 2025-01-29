@@ -11,6 +11,8 @@ const dbConfigRelojBioTimeGrupo = {
   options: {
     encrypt: false,
     enableArithAbort: true,
+    connectTimeout: 30000, // 30 segundos
+    requestTimeout: 30000  // 30 segundos
   },
 };
 
@@ -23,6 +25,8 @@ const dbConfigRelojBioTimeCentral = {
   options: {
     encrypt: false,
     enableArithAbort: true,
+    connectTimeout: 30000, // 30 segundos
+    requestTimeout: 30000  // 30 segundos
   },
 };
 
