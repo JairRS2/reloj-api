@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Ruta raíz
 app.get("/", (req, res) => {
-  
+
   res.send("Bienvenido a la API");
 });
 
