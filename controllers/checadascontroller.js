@@ -51,26 +51,26 @@ const login = async (req, res) => {
 
 // Obtener las checadas según el departamento del jefe y la base de datos seleccionada
 const getChecadasPorDepartamento = async (req, res) => {
-  const { nickname, db } = req.params; // Obtener departamentoId y db (grupo o central)
+  const { nickname, db } = req.params; // Obtener clavedelusuario y db (grupo o central)
 
   // Validar que se haya enviado un departamentoId válido
   if (!nickname) {
-    return res.status(400).json({ message: 'Se requiere una clave de jefe de departamento.' });
+    return res.status(400).json({ message: 'Se requiere una clave de jefe de departamento.' }); 
   }
 
   // Seleccionar el pool de conexión basado en el parámetro 'db'
   const poolConnection = db === 'central' ? poolCentral : poolGrupo;
 
-  // Definir las vistas correspondientes según el departamento para cada base de datos
+  // Definir las vistas correspondientes a la base de datos grupo
   const vistasPorDepartamentoGrupo = {
-    'M0982': 'Checadas_Generales',
-    'A2177': 'Checadas_Sistemas',
+    'M0982': 'Checadas_Sistemas',
+    'A2177': 'Checadas_Generales',
     'A2166': 'Checadas_Tesoreria',
     'A2161': 'Checadas_Nominas',
     'A2171': 'Checadas_Contabilidad',
     'A2164': 'Checadas_Direccion_Admva',
   };
-
+  //Definir las vistas correspondientes a la base de datos central
   const vistasPorDepartamentoCentral = {
     'A0789': 'Checadas_Central_AsistenteOperativo',
     'M0121': 'Checadas_Central_CajeroGeneral',
@@ -78,6 +78,7 @@ const getChecadasPorDepartamento = async (req, res) => {
     'E0507': 'Checadas_Central_GerenteRelab',
     'M0970': 'Checadas_Central_InfControl',
     'A1919': 'Checadas_Central_JefeCamaras',
+    'A2177': 'Checadas_Central_Generales',
   };
 
   // Seleccionar el mapa de vistas correspondiente según la base de datos
@@ -105,7 +106,7 @@ const getChecadasPorDepartamento = async (req, res) => {
 };
 
 
-// Función para obtener las checadas
+// Función para obtener las checadas (Metodo sencillo para ver como se hace consulta a la base de datos y hace la peticion de la vista Checadas_Generales)
 const getChecadas = async (req, res) => {
   try {
     const poolConnection = await poolGrupo; // Usamos poolGrupo como ejemplo (puedes cambiar a poolCentral si es necesario)
